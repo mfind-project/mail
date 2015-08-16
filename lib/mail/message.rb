@@ -1975,7 +1975,11 @@ module Mail
 
     def raw_source=(value)
       value.force_encoding("binary") if RUBY_VERSION >= "1.9.1"
-      @raw_source = value.to_crlf
+      @raw_source = if value.include?("Content-Transfer-Encoding: binary")
+                      value
+                    else
+                      value.to_crlf
+                    end
     end
 
     # see comments to body=. We take data and process it lazily
